@@ -1,0 +1,52 @@
+*&---------------------------------------------------------------------*
+*& Report  Z_ALV_CRUD_TEST
+*&
+*&---------------------------------------------------------------------*
+*&
+*&
+*&---------------------------------------------------------------------*
+
+REPORT z_alv_crud_test.
+
+TABLES: mara.
+
+DATA t_alv TYPE STANDARD TABLE OF mara."table ALV
+DATA s_alv TYPE mara."Structures ALV
+
+DATA t_fcat TYPE lvc_t_fcat. "table catalogue
+
+"SELECTION Screen
+SELECTION-SCREEN BEGIN OF BLOCK b01.
+SELECT-OPTIONS: s_matnr FOR mara-matnr OBLIGATORY.
+SELECTION-SCREEN END OF BLOCK b01.
+
+START-OF-SELECTION.
+
+  FREE t_alv."clear table
+
+  "data selection
+  SELECT *
+    FROM mara
+    INTO CORRESPONDING FIELDS OF TABLE t_alv
+    WHERE matnr  IN s_matnr.
+
+  "OBLIGATORY
+  CALL FUNCTION 'LVC_FIELDCATALOG_MERGE'
+    EXPORTING
+      i_structure_name       = 'mara'
+    CHANGING
+      ct_fieldcat            = t_fcat
+    EXCEPTIONS
+      inconsistent_interface = 1
+      program_error          = 2
+      OTHERS                 = 3.
+
+  "Display ALV
+  CALL FUNCTION 'REUSE_ALV_GRID_DISPLAY_LVC'
+    EXPORTING
+      it_fieldcat_lvc = t_fcat  "recevoir le catalogue de terrain
+    TABLES
+      t_outtab        = t_alv     "table de sortie de type var
+    EXCEPTIONS
+      program_error   = 1
+      OTHERS          = 2.
