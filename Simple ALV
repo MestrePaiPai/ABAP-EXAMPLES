@@ -1,17 +1,17 @@
 *&---------------------------------------------------------------------*
-*& Report  Z_ALV_CRUD_TEST
+*& Report  z_simple_alv
 *&
 *&---------------------------------------------------------------------*
 *&
 *&
 *&---------------------------------------------------------------------*
 
-REPORT z_alv_crud_test.
+REPORT z_simple_alv.
 
 TABLES: mara.
 
 DATA t_alv TYPE STANDARD TABLE OF mara."table ALV
-DATA s_alv TYPE mara."Structures ALV
+DATA s_alv TYPE mara.                  "Structures ALV
 
 DATA t_fcat TYPE lvc_t_fcat. "table catalogue
 
@@ -44,9 +44,9 @@ START-OF-SELECTION.
   "Display ALV
   CALL FUNCTION 'REUSE_ALV_GRID_DISPLAY_LVC'
     EXPORTING
-      it_fieldcat_lvc = t_fcat  "recevoir le catalogue de terrain
+      it_fieldcat_lvc = t_fcat  "Receive the field catalog
     TABLES
-      t_outtab        = t_alv     "table de sortie de type var
+      t_outtab        = t_alv     "table output
     EXCEPTIONS
       program_error   = 1
       OTHERS          = 2.
